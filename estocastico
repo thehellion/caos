@@ -1,0 +1,43 @@
+workspace()
+
+const T=0        #temperatura, en T=0 no hay ruido
+
+const V=1e-2     #IMPORTANTE, valor de la velocidad de barrido, esto es el parámetro principal
+const dt=1e-2    #¿esto se puede deducir de la velocidad?
+
+const γ=2        #IMPORTANTE, parámetros, en principio, no tocar
+const η=4
+
+x_0=0            #valor de posición inicial, en principio irrelevante
+v_0=0            #valor de la velocidad inicial (x punto, no V), irrelevante también
+
+x=x_0            #declaración de las variables problema y sus valores iniciales (definidos arriba)
+v=v_0
+
+t=0              #inicialización del tiempo
+
+f1(v)=v          #definición de las funciones a integrar
+f2(x,v)=V*t-x-γ*f1(v)-η*sin(x)
+
+#función para resolver cosas estocásticas (ver papel)
+function estocastico(x,v,f1,f2)
+  z=randn()
+  D=2*η
+  ɛ=(dt*D)^(1/2)
+  g11=f1(v+ɛ*z)
+  g12=f2(x,v+ɛ*z)
+  g21=f1(v+dt*g12)
+  g22=f2(x+g11*dt,v+g12*dt)
+  return x+dt*(g11+g21)/2, v+dt*(g21+g22)/2+ɛ*z
+end
+
+fichero = open("estoc1.txt","w")
+
+#bucle principal
+for i=1:1/(V*dt)   #Esto es lo más discutible, he elegido tiempo total =1 dado que dt y V son <1, 
+  t=i*dt           #así que no sé si la cosa es muy legal
+  x,v=estocastico(x,v,f1,f2)
+  print(fichero, V*t,"\t", f2(x,v),("\n"))
+end
+
+close(fichero)
