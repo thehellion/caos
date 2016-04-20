@@ -1,2 +1,2 @@
-# caos
-Trabajo de caos
+# Caos
+Trabajo de caos. Hacer cosas estocásitcas.
