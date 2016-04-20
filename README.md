@@ -1,2 +1,2 @@
 # Caos
-Trabajo de caos. Hacer cosas estocásitcas.
+Trabajo de caos. Programa acabado, función normalizada. No funciona.
