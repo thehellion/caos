@@ -22,7 +22,7 @@ f2(x,v)=V*t-x-γ*f1(v)-η*sin(x)
 #función para resolver cosas estocásticas (ver papel)
 function estocastico(x,v,f1,f2)
   z=randn()
-  D=2*η
+  D=2*η*T
   ɛ=(dt*D)^(1/2)
   g11=f1(v+ɛ*z)
   g12=f2(x,v+ɛ*z)
