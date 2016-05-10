@@ -36,7 +36,7 @@ fichero = open("estoc1.txt","w")
 for i=0:dt:4000
   t=i*dt
   x,v=estocastico(x,v,f1,f2)
-  print(fichero, V*t,"\t", f2(x,v),"\t",x,"\t",v,("\n"))
+  print(fichero, V*t,"\t","\t",V*t-x,"\t",v,("\n"))
 end
 
 close(fichero)
