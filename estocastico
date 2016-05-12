@@ -1,22 +1,27 @@
-workspace()
 
-const T=0        #temperatura, en T=0 no hay ruido
+const T=0.2       #temperatura, en T=0 no hay ruido
 
 const V=1e-1     #IMPORTANTE, valor de la velocidad de barrido, esto es el parámetro principal
 const dt=1e-1   #¿esto se puede deducir de la velocidad?
 
-const γ=4      #Término que va con la velocidad. "Fuerza"
-const η=1.2       #Término que va con el seno (potencial), tamaño átomos
+const γ=2      #Término que va con la velocidad. "Fuerza"
+const η=10       #Término que va con el seno (potencial), tamaño átomos
+
+const filelapse=1
 
 x_0=0            #valor de posición inicial, en principio irrelevante
 v_0=0            #valor de la velocidad inicial (x punto, no V), irrelevante también
 
 x=x_0            #declaración de las variables problema y sus valores iniciales (definidos arriba)
 v=v_0
+
 t=0              #inicialización del tiempo
+sum=0
 
 f1(v)=v          #definición de las funciones a integrar
 f2(x,v)=V*t-x-γ*f1(v)-η*sin(x)
+#f2(x,v)=-γ*f1(v)
+
 
 #función para resolver cosas estocásticas (ver papel)
 function estocastico(x,v,f1,f2)
@@ -30,13 +35,23 @@ function estocastico(x,v,f1,f2)
   return x+dt*(g11+g21)/2, v+dt*(g21+g22)/2+ɛ*z
 end
 
-fichero = open("estoc1.txt","w")
+fichero = open("estoc2.txt","w")
+print(fichero, "#",γ,"\t",η,"\t",T,("\n"))
 
+N=40000
 #bucle principal
-for i=0:dt:4000
-  t=i*dt
+sum2=0
+sum=0
+for i=0:dt:N
   x,v=estocastico(x,v,f1,f2)
-  print(fichero, V*t,"\t","\t",V*t-x,"\t",v,("\n"))
+  sum+=v^2
+  sum2+=V*t-x
+  t+=dt
+  if i%filelapse == 0
+      print(fichero, V*t,"\t",V*t-x,"\t",sum/(i*dt),"\t",sum2/(i*dt),("\n"))
+  end
 end
+
+#print(fichero,"#", V*t,"\t",V*t-x,"\t",x,("\n"))
 
 close(fichero)
